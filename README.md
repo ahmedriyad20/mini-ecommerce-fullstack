@@ -79,6 +79,10 @@ Open a terminal in the `MiniECommerce.API` directory and run:
 
 Or use Package Manager Console in Visual Studio:
 
+### Database Diagram:
+<img width="803" height="603" alt="Screenshot 2026-03-01 190738" src="https://github.com/user-attachments/assets/9d02527b-3de3-4c31-af0c-48cb6e07b5da" />
+
+
 ### 4. Restore Dependencies
 
 ## ▶️ Running the Application
