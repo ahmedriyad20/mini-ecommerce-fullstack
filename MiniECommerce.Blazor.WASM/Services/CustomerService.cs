@@ -18,11 +18,6 @@ namespace MiniECommerce.Blazor.WASM.Services
             return await _httpClient.GetFromJsonAsync<PagedResult<CustomerDto>>($"api/customers?pageNumber={pageNumber}&pageSize={pageSize}");
         }
 
-        public async Task<CustomerDto?> GetCustomerByIdAsync(Guid id)
-        {
-            return await _httpClient.GetFromJsonAsync<CustomerDto>($"api/customers/{id}");
-        }
-
         public async Task<CustomerDto?> CreateCustomerAsync(CreateCustomerDto customer)
         {
             var response = await _httpClient.PostAsJsonAsync("api/customers", customer);

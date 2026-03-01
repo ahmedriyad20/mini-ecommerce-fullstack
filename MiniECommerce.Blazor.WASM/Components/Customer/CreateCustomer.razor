@@ -1,0 +1,51 @@
+﻿@page "/create-customer"
+@inject CustomerService CustomerService
+@inject NavigationManager NavigationManager
+
+<h3>Create Customer</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="customerForm" OnValidSubmit="AddCustomer" FormName="create">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+
+            <div class="mb-3">
+                <label for="fullname" class="form-label">Full Name:</label>
+                <InputText id="fullname" @bind-Value="customerForm.FullName" class="form-control" />
+                <ValidationMessage For="() => customerForm.FullName" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone:</label>
+                <InputText id="phone" @bind-Value="customerForm.Phone" class="form-control" />
+                <ValidationMessage For="() => customerForm.Phone" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/customers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private CustomerFormModel customerForm { get; set; } = new();
+
+    private async Task AddCustomer()
+    {
+        var customer = new CreateCustomerDto(customerForm.FullName, customerForm.Phone);
+        var result = await CustomerService.CreateCustomerAsync(customer);
+        NavigationManager.NavigateTo("/customers");
+    }
+
+    private class CustomerFormModel
+    {
+        public string FullName { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+    }
+}
