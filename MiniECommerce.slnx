@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="MiniECommerce.Application/MiniECommerce.Application.csproj" />
+  <Project Path="MiniECommerce.Blazor.WASM/MiniECommerce.Blazor.WASM.csproj" />
   <Project Path="MiniECommerce.Domain/MiniECommerce.Domain.csproj" />
   <Project Path="MiniECommerce.Infrastructure/MiniECommerce.Infrastructure.csproj" />
   <Project Path="MiniECommerce.Service/MiniECommerce.Service.csproj" />

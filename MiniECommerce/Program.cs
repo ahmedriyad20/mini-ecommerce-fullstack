@@ -36,6 +36,36 @@ namespace MiniECommerce
             builder.Services.AddValidatorsFromAssembly(typeof(ValidationBehavior<,>).Assembly);
             #endregion
 
+            #region Configure CORS to allow requests from any origin
+            builder.Services.AddCors(options =>
+            {
+                // Policy 1: Allow everything (for development)
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+
+                // Policy 2: Restrict to specific origin (for production)
+                options.AddPolicy("ProductionPolicy", builder =>
+                {
+                    builder.WithOrigins("https://myapp.com", "https://www.myapp.com")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                });
+
+                // Policy 3: Read-only access
+                options.AddPolicy("ReadOnly", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .WithMethods("GET")
+                           .AllowAnyHeader();
+                });
+            });
+            #endregion
+
             #region Swagger Setting to enable adding token
             builder.Services.AddSwaggerGen(swagger =>
             {
@@ -66,6 +96,8 @@ namespace MiniECommerce
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 
