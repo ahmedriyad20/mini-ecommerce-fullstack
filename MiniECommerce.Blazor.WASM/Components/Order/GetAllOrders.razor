@@ -1,0 +1,74 @@
+﻿@page "/orders"
+@inject OrderService OrderService
+@inject NavigationManager NavigationManager
+
+<h3>GetAllOrders</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NavigateToCreateOrder">
+        <i class="bi bi-plus-circle"></i> Create New Order
+    </button>
+</div>
+
+@if (orders?.Items?.Any() == true)
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Order Date</th>
+                        <th>Total Items</th>
+                        <th>Total before discount</th>
+                        <th>Discount</th>
+                        <th>Final Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in orders.Items)
+                    {
+                        <tr>
+                            <td>@order.Id.ToString()</td>
+                            <td>@order.OrderDate.ToString()</td>
+                            <td>@order.TotalItems</td>
+                            <td>@order.Subtotal.ToString("C")</td>
+                            <td>@order.DiscountPercentage% (@order.DiscountAmount.ToString())</td>
+                            <td>@order.Total.ToString()</td>
+                            <td>
+                                <button class="btn btn-sm btn-info" @onclick="() => ViewOrderDetails(order.Id)"> @* // we needed to use lambda here to pass the order.Id parameter *@
+                                   
+                                   View Details
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading orders...</p>
+}
+
+@code {
+    private PagedResult<OrderDto>? orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.GetOrdersAsync(1, 100);
+    }
+
+    private void NavigateToCreateOrder()
+    {
+        NavigationManager.NavigateTo("/create-order");
+    }
+
+    private void ViewOrderDetails(Guid orderId)
+    {
+        NavigationManager.NavigateTo($"/orders/{orderId}");
+    }
+}

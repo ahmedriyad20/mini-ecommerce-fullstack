@@ -1,0 +1,100 @@
+﻿@page "/orders/{OrderId:guid}"
+@inject OrderService OrderService
+@inject NavigationManager NavigationManager
+
+<h3>GetOrderById</h3>
+
+@if (order != null)
+{
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Order Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Order ID:@order.Id</p>
+                    <p>Customer ID: @order.CustomerId</p>
+                    <p>Order Date: @order.OrderDate.ToString()</p>
+                </div>
+                <div class="col-md-6">
+                    <p>Total Items: @order.TotalItems</p>
+                    <p>Discount Applied: @order.DiscountPercentage%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Order Items</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in order.Items)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.UnitPrice.ToString()</td>
+                            <td>@item.LineTotal.ToString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <table class="table table-sm">
+                        <tr>
+                            <td>Subtotal:></td>
+                            <td class="text-end">@order.Subtotal.ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>Discount (@order.DiscountPercentage%):</td>
+                            <td class="text-end text-success">-@order.DiscountAmount.ToString()</td>
+                        </tr>
+                        <tr class="border-top">
+                            <td>Total:</td>
+                            <td class="text-end"><h5>@order.Total.ToString()</h5></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="/orders" class="btn btn-secondary">Back to Orders</a>
+    </div>
+}
+else
+{
+    <p>Loading order details...</p>
+}
+
+@code {
+    [Parameter]
+    public Guid OrderId { get; set; }
+
+    private OrderDto? order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await OrderService.GetOrderByIdAsync(OrderId);
+    }
+}

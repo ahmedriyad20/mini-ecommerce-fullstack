@@ -16,9 +16,4 @@
     <ProjectReference Include="..\MiniECommerce.Shared\MiniECommerce.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Order\" />
-    <Folder Include="Components\Product\" />
-  </ItemGroup>
-
 </Project>

@@ -1,0 +1,107 @@
+﻿@page "/products"
+@inject ProductService ProductService
+@inject NavigationManager NavigationManager
+
+<h3>Get All Products</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="NavigateToCreateProduct">
+        <i class="bi bi-plus-circle"></i> Add New Product
+    </button>
+</div>
+
+@if (products?.Items?.Any() == true)
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Available Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in products.Items)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Price.ToString("C")</td>
+                            <td>@product.AvailableQuantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-secondary"
+                        @onclick="GoToPreviousPage"
+                        disabled="@(currentPage == 1)">
+                    Previous
+                </button>
+
+                <span>Page @currentPage of @totalPages</span>
+
+                <button class="btn btn-secondary"
+                        @onclick="GoToNextPage"
+                        disabled="@(currentPage >= totalPages)">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading products...</p>
+}
+
+@code {
+    private PagedResult<ProductDto>? products;
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    private async Task LoadProducts()
+    {
+        products = await ProductService.GetProductsAsync(currentPage, pageSize);
+
+        if (products != null)
+        {
+            // Calculate total pages based on total count and page size
+            totalPages = (int)Math.Ceiling((double)products.TotalCount / pageSize);
+        }
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+            await LoadProducts();
+        }
+    }
+
+    private async Task GoToPreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            await LoadProducts();
+        }
+    }
+
+    private void NavigateToCreateProduct()
+    {
+        NavigationManager.NavigateTo("/create-product");
+    }
+}

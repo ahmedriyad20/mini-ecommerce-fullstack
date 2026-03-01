@@ -1,0 +1,58 @@
+﻿@page "/create-product"
+@inject ProductService ProductService
+@inject NavigationManager NavigationManager
+
+<h3>CreateProduct</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="productForm" OnValidSubmit="AddProduct" FormName="create">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <InputText id="name" @bind-Value="productForm.Name" class="form-control" />
+                <ValidationMessage For="() => productForm.Name" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Price:</label>
+                <InputNumber id="price" @bind-Value="productForm.Price" class="form-control" />
+                <ValidationMessage For="() => productForm.Price" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Available Quantity:</label>
+                <InputNumber id="quantity" @bind-Value="productForm.AvailableQuantity" class="form-control" />
+                <ValidationMessage For="() => productForm.AvailableQuantity" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/products">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private ProductFormModel productForm { get; set; } = new();
+
+    private async Task AddProduct()
+    {
+        var product = new CreateProductDto(productForm.Name, productForm.Price, productForm.AvailableQuantity);
+        var result = await ProductService.CreateProductAsync(product);
+        NavigationManager.NavigateTo("/products");
+    }
+
+    private class ProductFormModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public int AvailableQuantity { get; set; }
+    }
+}
