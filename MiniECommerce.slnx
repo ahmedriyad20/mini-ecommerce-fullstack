@@ -4,5 +4,5 @@
   <Project Path="MiniECommerce.Infrastructure/MiniECommerce.Infrastructure.csproj" />
   <Project Path="MiniECommerce.Service/MiniECommerce.Service.csproj" />
   <Project Path="MiniECommerce.Shared/MiniECommerce.Shared.csproj" />
-  <Project Path="MiniECommerce/MiniECommerce.csproj" />
+  <Project Path="MiniECommerce/MiniECommerce.API.csproj" />
 </Solution>
